@@ -1,75 +1,75 @@
-# CodexAI 🚀
+# CodexAI
 
-> An AI-powered codebase exploration and chat engine. 
+An AI-powered codebase exploration and chat engine.
 
-CodexAI (formerly Codebase OS) is a full-stack application that allows you to easily explore, understand, and chat with any GitHub repository using AI. It clones repositories, indexes their content using vector embeddings, and allows you to ask natural language questions about the codebase.
+CodexAI (formerly Codebase OS) is a full-stack application designed to explore, analyze, and interact with GitHub repositories using natural language. It clones codebases locally, processes and indexes their content using vector embeddings, and enables users to ask specific questions about the architecture, logic, or implementation of the project.
 
-## ✨ Features
+## Features
 
-- 📂 **Instant Cloning:** Enter a GitHub URL to instantly clone and explore the repository locally.
-- 🌳 **Interactive File Explorer:** Browse through the repository structure with a responsive, tree-based UI.
-- 📝 **Code Viewer:** View the content of any supported file with full syntax highlighting.
-- 🧠 **AI Embeddings:** Automatically processes and embeds the source code into a persistent vector database (ChromaDB) using the Cohere API.
-- 💬 **Codebase Chat:** Ask questions about the codebase architecture, logic, or specific features, and get accurate answers grounded in the repository's source code.
+- **Repository Cloning:** Clones any public GitHub repository locally via URL.
+- **Interactive File Explorer:** Navigates the directory structure of the cloned repository with a responsive, tree-based file explorer interface.
+- **File Viewer:** Displays the contents of source files with integrated syntax highlighting.
+- **Semantic Code Embeddings:** Automatically processes, chunks, and indexes source code files into a local, persistent vector database (ChromaDB) using the Cohere API.
+- **Codebase Chat Context:** Queries the vector database for relevant code blocks matching user questions, then uses Cohere's language model to answer questions with grounded codebase context.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-**Frontend:**
+### Frontend
 - React 19
 - Material UI (MUI)
 - Framer Motion (Animations)
 - React Syntax Highlighter
 
-**Backend:**
+### Backend
 - Python & FastAPI
 - ChromaDB (Persistent Vector Database)
-- Cohere API (Embeddings & Text Generation)
+- Cohere API (Embeddings and Chat Generation)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.8+
-- Node.js & npm
-- A [Cohere API Key](https://dashboard.cohere.com/api-keys)
+- Node.js and npm
+- A Cohere API key
 
-### 1. Clone the repository
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/MetaFazer/CodexAI.git
-cd CodexAI
+git clone https://github.com/MetaFazer/Codebase.git
+cd Codebase
 ```
 
-### 2. Backend Setup
-Navigate to the backend directory, install dependencies, and set up your environment variables.
+### 2. Backend Configuration
+Navigate to the backend directory, install the required packages, and configure the environment variables:
 ```bash
 cd backend
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Create a .env file and add your Cohere API key
+# Create environment file and add your Cohere API key
 echo "COHERE_API_KEY=your_api_key_here" > .env
 
 # Run the backend server
 python -m uvicorn main:app --reload --port 8000
 ```
-*The backend will be running at `http://localhost:8000`*
+The backend server runs locally at `http://localhost:8000`.
 
-### 3. Frontend Setup
-Open a new terminal, navigate to the frontend directory, install dependencies, and start the development server.
+### 3. Frontend Configuration
+In a separate terminal, navigate to the frontend directory, install the node modules, and start the React dev server:
 ```bash
 cd frontend
 
 # Install dependencies
 npm install
 
-# Start the frontend
+# Start the application
 npm start
 ```
-*The frontend will be running at `http://localhost:3000`*
+The frontend application will be accessible at `http://localhost:3000`.
 
-## 📖 How It Works
+## Architecture and Workflow
 
-1. **Clone:** The frontend sends a GitHub URL to the `/clone` endpoint. The backend uses `git clone` to pull the code into a local `repos/` folder.
-2. **Explore:** The `/files` and `/file_content` endpoints allow the React frontend to visualize the directory structure and read files.
-3. **Embed:** The `/embed` endpoint scans the repository for supported file extensions (e.g., `.py`, `.js`, `.md`), chunks the content, generates embeddings using Cohere, and stores them in ChromaDB.
-4. **Chat:** The `/chat` endpoint takes a natural language query, embeds it, queries ChromaDB for the top 5 most relevant code snippets, and passes those snippets as context to Cohere's Chat model to generate an answer.
+1. **Repository Ingestion:** The frontend posts a target GitHub URL to the `/clone` endpoint. The backend clones the repository into the local `repos/` workspace.
+2. **Directory Visualization:** The backend exposes `/files` and `/file_content` endpoints to allow the frontend's file explorer to render the directory structure and read file content dynamically.
+3. **Chunking & Indexing:** The `/embed` endpoint walks the project tree to gather supported source files (such as `.py`, `.js`, `.md`), segments the code into manageable chunks, generates vector representations using Cohere embeddings, and commits them to ChromaDB.
+4. **Retrieval-Augmented Generation (RAG):** When a user asks a question via the `/chat` endpoint, the system embeds the query, retrieves the most similar code chunks from ChromaDB, compiles those chunks into a developer context window, and requests a response from Cohere's model.
